@@ -17,13 +17,17 @@ namespace BoxField
 
         //used to draw boxes on screen
         SolidBrush boxBrush = new SolidBrush(Color.White);
-        
-        //TODO - create a list to hold a column of boxes        
 
+        // a list to hold a column of boxes        
+        List<Box> leftBoxes = new List<Box>();
+        List<Box> rightBoxes = new List<Box>();
+
+        int boxCounter;
 
         public GameScreen()
         {
             InitializeComponent();
+            OnStart();
         }
 
         /// <summary>
@@ -32,6 +36,11 @@ namespace BoxField
         public void OnStart()
         {
             //TODO - set game start values
+            Box b1 = new Box(25, 24, 20);
+            leftBoxes.Add(b1);
+
+            Box b2 = new Box(125, 24, 20);
+            rightBoxes.Add(b2);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -50,7 +59,7 @@ namespace BoxField
 
         private void GameScreen_KeyUp(object sender, KeyEventArgs e)
         {
-            //player 1 button releases
+            // player 1 button releases
             switch (e.KeyCode)
             {
                 case Keys.Left:
@@ -64,18 +73,54 @@ namespace BoxField
 
         private void gameLoop_Tick(object sender, EventArgs e)
         {
-            //TODO - update location of all boxes (drop down screen)
+            // update location of all boxes (drop down screen)
+            foreach (Box b in leftBoxes)
+            {
+                b.y += 5;
+            }
 
-            //TODO - remove box if it has gone of screen
+            foreach (Box b in rightBoxes)
+            {
+                b.y += 5;
+            }
 
-            //TODO - add new box if it is time
+            // remove box if it has gone of screen
+            if (leftBoxes[0].y > this.Height - leftBoxes[0].size)
+            {
+                leftBoxes.RemoveAt(0);
+            }
+            if (rightBoxes[0].y > this.Height - rightBoxes[0].size)
+            {
+                rightBoxes.RemoveAt(0);
+            }
+
+            // add new box if it is time
+            boxCounter++;
+
+            if (boxCounter % 5 == 0)
+            {
+                Box b1 = new Box(25, 24, 20);
+                leftBoxes.Add(b1);
+
+                Box b2 = new Box(125, 24, 20);
+                rightBoxes.Add(b2);
+            }
 
             Refresh();
         }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //TODO - draw boxes to screen
+            // draw boxes to screen
+            foreach (Box b in leftBoxes)
+            {
+                e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
+            }
+
+            foreach (Box b in rightBoxes)
+            {
+                e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
+            }
         }
     }
 }
