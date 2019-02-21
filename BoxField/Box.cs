@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace BoxField
 {
@@ -10,17 +11,18 @@ namespace BoxField
     {
         // need colour
         public int x, y, size;
-        public string colour;
+        public Color colour;
+       
 
         public Box(int _x, int _y, int _size)
         {
             x = _x;
             y = _y;
             size = _size;
-            colour = "White";
+            colour = Color.White;
         }
 
-        public Box(int _x, int _y, int _size, string _colour)
+        public Box(int _x, int _y, int _size, Color _colour)
         {
             x = _x;
             y = _y;
@@ -28,9 +30,10 @@ namespace BoxField
             colour = _colour;
         }
 
-        public void Move()
+        public void Move(int _x, int _y)
         {
-
+            x += _x;
+            y += _y;
         }
     }
 }

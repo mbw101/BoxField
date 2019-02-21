@@ -22,7 +22,12 @@ namespace BoxField
         List<Box> leftBoxes = new List<Box>();
         List<Box> rightBoxes = new List<Box>();
 
+        Random random = new Random();
+
         int boxCounter;
+        int xValue = 2;
+        int index = 0;
+        bool moveRight = false;
 
         public GameScreen()
         {
@@ -30,16 +35,24 @@ namespace BoxField
             OnStart();
         }
 
+        public Color MakeRandomColour()
+        {
+            int rColour = random.Next(0, 255);
+            int gColour = random.Next(0, 255);
+            int bColour = random.Next(0, 255);
+            return Color.FromArgb(rColour, gColour, bColour);
+        }
+
         /// <summary>
         /// Set initial game values here
         /// </summary>
         public void OnStart()
         {
-            //TODO - set game start values
-            Box b1 = new Box(25, 24, 20);
+            // set game start values
+            Box b1 = new Box(25, 24, 20, MakeRandomColour());
             leftBoxes.Add(b1);
 
-            Box b2 = new Box(125, 24, 20);
+            Box b2 = new Box(125, 24, 20, b1.colour);
             rightBoxes.Add(b2);
         }
 
@@ -97,12 +110,29 @@ namespace BoxField
             // add new box if it is time
             boxCounter++;
 
+            // increment index to create pattern
+            if (moveRight)
+            {
+                if (index >= 25)
+                {
+                    index++;
+                    moveRight = false;
+                }              
+            }
+            else if (!moveRight)
+            {
+                index--;
+            }
+
+
+
             if (boxCounter % 5 == 0)
             {
-                Box b1 = new Box(25, 24, 20);
+                
+                Box b1 = new Box(25 - (xValue * index), 24, 20, MakeRandomColour());
                 leftBoxes.Add(b1);
 
-                Box b2 = new Box(125, 24, 20);
+                Box b2 = new Box(125 - (xValue * index), 24, 20, b1.colour);
                 rightBoxes.Add(b2);
             }
 
@@ -114,11 +144,13 @@ namespace BoxField
             // draw boxes to screen
             foreach (Box b in leftBoxes)
             {
+                boxBrush.Color = b.colour;
                 e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
             }
 
             foreach (Box b in rightBoxes)
             {
+                boxBrush.Color = b.colour;
                 e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
             }
         }
