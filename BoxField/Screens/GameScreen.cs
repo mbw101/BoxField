@@ -23,6 +23,10 @@ namespace BoxField
         List<Box> rightBoxes = new List<Box>();
 
         Box player;
+        Bitmap playerImage;
+        Rectangle actualShip = new Rectangle(5, 13, 14, 20);
+        int playerWidth = 52;
+        int playerHeight = 32;
 
         Random random = new Random();
 
@@ -59,6 +63,7 @@ namespace BoxField
             rightBoxes.Add(b2);
 
             player = new Box(75, 450, 20);
+            playerImage = new Bitmap(Properties.Resources.ship);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -149,7 +154,7 @@ namespace BoxField
                 // move left
                 moveRight = false;
             }
-            else if (index < 5)
+            else if (index < 50)
             {
                 moveRight = true;
             }
@@ -181,8 +186,10 @@ namespace BoxField
                 e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
             }
 
+            // draw player ship
             boxBrush.Color = Color.White;
             e.Graphics.FillEllipse(boxBrush, player.x, player.y, player.size, player.size);
+            //e.Graphics.DrawImage(playerImage, player.x, player.y);
         }
     }
 }

@@ -12,7 +12,6 @@ namespace BoxField
         public int x, y, size;
         public Color colour;
        
-
         public Box(int _x, int _y, int _size)
         {
             x = _x;
