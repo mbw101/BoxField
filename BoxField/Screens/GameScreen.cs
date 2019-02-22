@@ -22,9 +22,12 @@ namespace BoxField
         List<Box> leftBoxes = new List<Box>();
         List<Box> rightBoxes = new List<Box>();
 
+        Box player;
+
         Random random = new Random();
 
         int boxCounter;
+        int boxSpeed = 5;
         int xValue = 2;
         int index = 0;
         bool moveRight = false;
@@ -54,6 +57,8 @@ namespace BoxField
 
             Box b2 = new Box(125, 24, 20, b1.colour);
             rightBoxes.Add(b2);
+
+            player = new Box(75, 450, 20);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -89,13 +94,32 @@ namespace BoxField
             // update location of all boxes (drop down screen)
             foreach (Box b in leftBoxes)
             {
-                b.y += 5;
+                b.Move(boxSpeed);
             }
 
             foreach (Box b in rightBoxes)
             {
-                b.y += 5;
+                b.Move(boxSpeed);
             }
+
+            if (leftArrowDown)
+            {
+                player.Move(5, "left");
+            }
+
+            if (rightArrowDown)
+            {
+                player.Move(5, "right");
+            }
+
+            // check for collision between player and boxes (foreach loop with two lists)
+            foreach (Box b in leftBoxes.Union(rightBoxes))
+            {
+                if (player.Collision(b))
+                {
+                    gameLoop.Stop();
+                }
+            }      
 
             // remove box if it has gone of screen
             if (leftBoxes[0].y > this.Height - leftBoxes[0].size)
@@ -113,26 +137,29 @@ namespace BoxField
             // increment index to create pattern
             if (moveRight)
             {
-                if (index >= 25)
-                {
-                    index++;
-                    moveRight = false;
-                }              
+                index++;
             }
             else if (!moveRight)
             {
                 index--;
             }
 
-
+            if (index >= 360)
+            {
+                // move left
+                moveRight = false;
+            }
+            else if (index < 5)
+            {
+                moveRight = true;
+            }
 
             if (boxCounter % 5 == 0)
-            {
-                
-                Box b1 = new Box(25 - (xValue * index), 24, 20, MakeRandomColour());
+            {               
+                Box b1 = new Box(25 + (xValue * index), 24, 20, MakeRandomColour());
                 leftBoxes.Add(b1);
 
-                Box b2 = new Box(125 - (xValue * index), 24, 20, b1.colour);
+                Box b2 = new Box(125 + (xValue * index), 24, 20, b1.colour);
                 rightBoxes.Add(b2);
             }
 
@@ -153,6 +180,9 @@ namespace BoxField
                 boxBrush.Color = b.colour;
                 e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
             }
+
+            boxBrush.Color = Color.White;
+            e.Graphics.FillEllipse(boxBrush, player.x, player.y, player.size, player.size);
         }
     }
 }

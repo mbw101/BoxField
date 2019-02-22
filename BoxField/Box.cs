@@ -9,7 +9,6 @@ namespace BoxField
 {
     class Box
     {
-        // need colour
         public int x, y, size;
         public Color colour;
        
@@ -30,10 +29,36 @@ namespace BoxField
             colour = _colour;
         }
 
-        public void Move(int _x, int _y)
+        public void Move(int speed)
         {
-            x += _x;
-            y += _y;
+            y += speed;
+        }
+
+        public void Move(int speed, string direction)
+        {
+            if (direction == "left")
+            {
+                x -= speed;
+            }
+            else if (direction == "right")
+            {
+                x += speed;
+            }
+        }
+
+        public bool Collision(Box b)
+        {
+            Rectangle rect1 = new Rectangle(x, y, size, size);
+            Rectangle rect2 = new Rectangle(b.x, b.y, b.size, b.size);
+
+            if (rect1.IntersectsWith(rect2))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
